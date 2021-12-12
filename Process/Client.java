@@ -14,7 +14,7 @@ public class Client implements Serializable{
             Iserver srv = (Iserver) Naming.lookup("GOL");
             srv.Affichage();
 
-            srv.updateLifespan(1,1,1);
+            srv.updateLifespan();
 
             srv.Affichage();
             //srv.updateLifespan( srv.getCell(new Position(0, 1, 1)) );

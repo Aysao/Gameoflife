@@ -15,6 +15,7 @@ public class Server extends UnicastRemoteObject implements Iserver {
     public Server() throws RemoteException{
         super();
         board = new Cell[3][3][3];
+		index = new ArrayList<Cell>();
 		Init();
         Initialize(0,1,1);
         Initialize(1,1,1);
@@ -56,47 +57,6 @@ public class Server extends UnicastRemoteObject implements Iserver {
 			}
 			System.out.println("\n");
 		}
-		
-
-
-        System.out.println("\n \n tableau Y Z");
-        for(int i = 0; i < board.length; i++)
-        {
-            System.out.println(" Rang : " + i);
-            for(int j = 0; j < board[i].length ;j++)
-            {
-                System.out.print("[ ");
-                for(int k = 0; k < board[i][j].length ;k++)
-                {
-                    if(k != 0)
-                        System.out.print(" , " + board[i][j][k].toString());
-                    else
-                        System.out.print(board[i][j][k].toString());
-                }
-                System.out.println(" ]");
-            }
-			System.out.println("\n");
-        }
-
-
-        System.out.println("\n \n tableau X Z");
-        for(int j = 0; j < board[0].length; j++)
-        {
-            System.out.println(" Rang : " + j);
-            for(int i = 0; i < board.length ;i++)
-            {
-                System.out.print("[ ");
-                for(int k = 0; k < board[i][j].length ;k++)
-                {
-                    if(k != 0)
-                        System.out.print(" , " + board[i][j][k].toString());
-                    else
-                        System.out.print(board[i][j][k].toString());
-                }
-                System.out.println(" ]");
-            }
-			System.out.println("\n");
-        }
         
     }
 
@@ -152,7 +112,7 @@ public class Server extends UnicastRemoteObject implements Iserver {
 	}
 
 	//retourne un tableau des cellules voisines ( 0 pour les mort  / 1 pour les vivants )
-	public int[] getNbNear(Cell c)
+	public void getNbNear(Cell c)
 	{
 		int[] k = new int[2];
 		for(int i = -1; i < 2;i++)
@@ -181,48 +141,48 @@ public class Server extends UnicastRemoteObject implements Iserver {
 				}
 			}
 		}
-		return k;
+		c.setNbVoisin(k[1]);
+		if( ( c.getNbVoisin() > 2 && !isAlive(c.getPos()) ) || (c.getNbVoisin() < 2 && isAlive(c.getPos() ) ) )
+		{
+			index.add(c);
+		}
 	}
 	
-	//apres une iteration la cellule fait naitre les cellules voisine qui sont morte
-	public void updateNear(Cell c)
+	//apres une iteration les cellules qui ont plus de 3 voisin ou plus et qui est morte devient vivante
+	//si une cellule vivante a moins de deux voisin elle meurt sinon rien ne change
+	public void updateNear()
 	{
-		for(int i = -1; i < 2;i++)
-		{	
-			for(int j = -1; j < 2;j++)
+		for(int i = 0; i < index.size();i++)
+		{
+			Cell c = index.get(i);
+			System.out.println(" index a modifier : " + i + " : " + c.getPos().getX() + " / " + c.getPos().getY() + " / " + c.getPos().getZ() + " State : " + c.getState());
+			System.out.println(" index nb voisin " + c.getNbVoisin());
+			if(c.getState() == 1 && c.getNbVoisin() < 2)
 			{
-				for(int h = -1 ; h < 2; h++)
-				{
-					if(i != 0 && j != 0 && h != 0)
-					{
-						Position p = new Position(c.getPos().getX()+i, c.getPos().getY()+j, c.getPos().getZ()+h);
-						if(onBoard(p))
-						{
-							if(!isAlive(p) && getNbNear(board[p.getX()][p.getY()][p.getZ()])[1] > 2)
-							{
-								//TODO : arrays list pour l'indexation pop push (BAG OF TASK)
-								board[p.getX()][p.getY()][p.getZ()].setState(1);
-							}
-						}
-					}
-				}
+				board[c.getPos().getX()][c.getPos().getY()][c.getPos().getZ()].setState(0);
+			}
+			else if(c.getState() == 0 && c.getNbVoisin() > 2)
+			{
+				board[c.getPos().getX()][c.getPos().getY()][c.getPos().getZ()].setState(1);
 			}
 		}
+		index.clear();
 	}
 	
 	//si la cellule c n'a pas assez de voisin elle meurt
-	public void updateLifespan(int x,int y,int z)
+	public void updateLifespan()
 	{
-		Cell c = board[x][y][z];
-		System.out.println(getNbNear(c)[1]);
-		if(getNbNear(c)[1] < 2)
+		for(int x = 0; x < board.length;x++)
 		{
-			c.setState(0);
-		}
-		updateNear(c);
-		//TODO : else augmenter sa lifespan pour un effet visuel
-
-		//TODO : nbdevoisin a la creation
+			for(int y = 0;y < board[x].length;y++)
+			{
+				for(int z = 0; z < board[x][y].length; z++)
+				{
+					getNbNear(board[x][y][z]);
+				}
+			}
+		} 
+		updateNear();
 	}
 
 

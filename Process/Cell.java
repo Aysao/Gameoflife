@@ -3,6 +3,7 @@ package Process;
 public class Cell {
 	private Position pos;
 	private int state = 0;
+	private int nbVoisin = 0;
 	
 	public Cell(int posX, int posY, int posZ)
 	{
@@ -43,5 +44,11 @@ public class Cell {
 		{
 			return "Dead";
 		}
+	}
+	public int getNbVoisin() {
+		return nbVoisin;
+	}
+	public void setNbVoisin(int nbVoisin) {
+		this.nbVoisin = nbVoisin;
 	}
 }
