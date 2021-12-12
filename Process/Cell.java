@@ -2,12 +2,14 @@ package Process;
 
 public class Cell {
 	private Position pos;
-	private int state = 1;
+	private int state = 0;
 	
 	public Cell(int posX, int posY, int posZ)
 	{
 		pos = new Position(posX,posY,posZ);
 	}
+
+
 	public Cell(Position p)
 	{
 		pos = p;
@@ -31,4 +33,15 @@ public class Cell {
 		this.state = state;
 	}
 	
+	public String toString()
+	{
+		if(state == 1)
+		{
+			return "Alive";
+		}
+		else
+		{
+			return "Dead";
+		}
+	}
 }
