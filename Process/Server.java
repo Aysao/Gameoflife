@@ -10,12 +10,17 @@ public class Server extends UnicastRemoteObject implements Iserver {
         super();
     }
 
+    public void Affichage()
+    {
+        System.out.println("Coucou");
+    }
+
     public static void main(String[] args)
     {
         try {
             Server srv = new Server();
             Naming.rebind("GOL", srv);
-            System.out.println("Démarrage du serveur ... ");
+            System.out.println("Demarrage du serveur ... ");
 
         } catch (Exception e) {
             System.out.println("Erreur ! ");
