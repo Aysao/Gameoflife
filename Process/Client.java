@@ -17,6 +17,10 @@ public class Client implements Serializable{
             srv.updateLifespan();
 
             srv.Affichage();
+
+            srv.updateLifespan();
+
+            srv.Affichage();
             //srv.updateLifespan( srv.getCell(new Position(0, 1, 1)) );
             //srv.updateLifespan( srv.getCell(new Position(2, 1, 1)) );
         }
