@@ -20,6 +20,8 @@ public class Server extends UnicastRemoteObject implements Iserver {
         Initialize(0,1,1);
         Initialize(1,1,1);
         Initialize(2,1,1);
+		Initialize(1,0,1);
+        Initialize(1,2,1);
     }
 
 	public void Init()
@@ -142,7 +144,7 @@ public class Server extends UnicastRemoteObject implements Iserver {
 			}
 		}
 		c.setNbVoisin(k[1]);
-		if( ( c.getNbVoisin() > 2 && !isAlive(c.getPos()) ) || (c.getNbVoisin() < 2 && isAlive(c.getPos() ) ) )
+		if( ( c.getNbVoisin() > 4 && !isAlive(c.getPos()) ) || (c.getNbVoisin() < 4 && isAlive(c.getPos() ) ) )
 		{
 			index.add(c);
 		}
@@ -157,11 +159,11 @@ public class Server extends UnicastRemoteObject implements Iserver {
 			Cell c = index.get(i);
 			System.out.println(" index a modifier : " + i + " : " + c.getPos().getX() + " / " + c.getPos().getY() + " / " + c.getPos().getZ() + " State : " + c.getState());
 			System.out.println(" index nb voisin " + c.getNbVoisin());
-			if(c.getState() == 1 && c.getNbVoisin() < 2)
+			if(c.getState() == 1 && c.getNbVoisin() < 4)
 			{
 				board[c.getPos().getX()][c.getPos().getY()][c.getPos().getZ()].setState(0);
 			}
-			else if(c.getState() == 0 && c.getNbVoisin() > 2)
+			else if(c.getState() == 0 && c.getNbVoisin() > 4)
 			{
 				board[c.getPos().getX()][c.getPos().getY()][c.getPos().getZ()].setState(1);
 			}

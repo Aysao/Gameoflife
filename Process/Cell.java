@@ -1,6 +1,8 @@
 package Process;
 
-public class Cell {
+import java.io.Serializable;
+
+public class Cell implements Serializable {
 	private Position pos;
 	private int state = 0;
 	private int nbVoisin = 0;
